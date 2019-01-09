@@ -1,17 +1,18 @@
-import React from 'react';
+import React from "react";
+import PropTypes from 'prop-types';
 
-export const TodoItem = (props) => {
+
+export const TodoItem = props => {
     return (
         <li>
-            <input type="checkbox" defaultChecked={props.isComplete}/>{props.name}
+            <input type="checkbox" defaultChecked={props.isComplete}/>
+            {props.name}
         </li>
-    )
+    );
 };
 
-
 TodoItem.propTypes = {
-    name: React.PropTypes.string.isRquired,
-    isComplete: React.PropTypes.bool,
-    id: React.PropTypes.number.isRquired
-
+    name: PropTypes.string,
+    isComplete: PropTypes.bool,
+    id: PropTypes.number
 };

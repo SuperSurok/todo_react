@@ -45,7 +45,6 @@ class App extends Component {
                 <div className="Todo-App">
                     <TodoForm
                         handleInputChange={this.handleInputChange}
-                        currentTodo={this.state.currentTodo}
                     />
                     <TodoList todos={this.state.todos}/>
                 </div>
