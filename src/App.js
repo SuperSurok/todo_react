@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {TodoForm} from "./components/todo/TodoForm";
+
 class App extends Component {
     constructor() {
         super();
@@ -12,11 +14,11 @@ class App extends Component {
                 {id: 3, name: 'Ship It!', isComplete: false}
             ],
             currentTodo: ''
-         };
-         this.handleInputChange = this.handleInputChange.bind(this)
+        };
+        this.handleInputChange = this.handleInputChange.bind(this)
     };
 
-    handleInputChange(evt){
+    handleInputChange(evt) {
         this.setState({
             currentTodo: evt.target.value
         })
@@ -36,13 +38,14 @@ class App extends Component {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        Learn React
+                        React Todos
                     </a>
                 </header>
                 <div className="Todo-App">
-                    <form>
-                        <input type="text" value={this.state.currentTodo} onChange={this.handleInputChange}/>
-                    </form>
+                    <TodoForm
+                        handleInputChange={this.handleInputChange}
+                        currentTodo={this.state.currentTodo}
+                    />
                     <div className="Todo-List">
                         <ul>
                             {this.state.todos.map(todo => <li key={todo.id}>
