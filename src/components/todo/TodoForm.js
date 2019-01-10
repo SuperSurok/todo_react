@@ -1,17 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-export const TodoForm = (props) => (
-    <form>
-        <input type="text"
-               onChange={props.handleInputChange}
-               value={props.currentTodo}
+export const TodoForm = props => (
+    <form onSubmit={props.handleSubmit}>
+        <input
+            type="text"
+            onChange={props.handleInputChange}
+            value={props.currentTodo}
         />
     </form>
 );
 
-
 TodoForm.propTypes = {
     handleInputChange: PropTypes.func,
-    currentTodo:  PropTypes.string
+    handleSubmit: PropTypes.func,
+    currentTodo: PropTypes.string
 };
