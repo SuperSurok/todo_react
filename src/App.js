@@ -11,6 +11,8 @@ import {
     updateTodo
 } from "./lib/todoHelpers";
 
+import {pipe, partial} from "./lib/util";
+
 class App extends Component {
     state = {
         todos: [
@@ -22,9 +24,12 @@ class App extends Component {
     };
 
     handleToggle = id => {
-        const todo = findById(id, this.state.todos);
-        const toggled = toggleTodo(todo);
-        const updatedTodos = updateTodo(this.state.todos, toggled);
+        const getUpdateTodos = pipe(
+            findById,
+            toggleTodo,
+            partial(updateTodo, this.state.todos)
+        );
+        const updatedTodos = getUpdateTodos(id, this.state.todos);
         this.setState({todos: updatedTodos});
     };
 
