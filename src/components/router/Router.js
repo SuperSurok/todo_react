@@ -11,7 +11,7 @@ export class Router extends Component {
     route: getCurrentPath()
   };
 
-  handleLineClick = (route) => {
+  handleLinkClick = (route) => {
     this.setState({ route });
     //eslint-disable-next-line
     history.pushState(null, "", route);
@@ -25,7 +25,7 @@ export class Router extends Component {
   getChildContext(){
     return {
       route: this.state.route,
-      linkHandler: this.state.handleLineClick
+      linkHandler: this.handleLinkClick
     }
   }
 
