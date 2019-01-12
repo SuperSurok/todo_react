@@ -15,7 +15,7 @@ import {
 } from "./lib/todoHelpers";
 
 import { pipe, partial } from "./lib/util";
-import { loadTodos, createTodo } from "./lib/todoService";
+import { loadTodos, createTodo, saveTodo } from "./lib/todoService";
 
 class App extends Component {
   state = {
@@ -38,13 +38,13 @@ class App extends Component {
   };
 
   handleToggle = id => {
-    const getUpdateTodos = pipe(
-      findById,
-      toggleTodo,
-      partial(updateTodo, this.state.todos)
-    );
-    const updatedTodos = getUpdateTodos(id, this.state.todos);
+    const getToggleTodo = pipe(findById, toggleTodo);
+    const updated = getToggleTodo(id, this.state.todos);
+    const getUpdateTodos = partial(updateTodo, this.state.todos);
+    const updatedTodos = getUpdateTodos(updated);
     this.setState({ todos: updatedTodos });
+    saveTodo(updated)
+      .then(() => this.showTempMessgae("Todo Updated"))
   };
 
   handleSubmit = evt => {
@@ -62,7 +62,7 @@ class App extends Component {
       errorMessage: ""
     });
 
-    createTodo(newTodo).then(() => this.showTempMessgae("Todo added" ));
+    createTodo(newTodo).then(() => this.showTempMessgae("Todo added"));
   };
 
   showTempMessgae = msg => {
