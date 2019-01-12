@@ -1,113 +1,121 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import logo from "./logo.svg";
 import "./App.css";
 
-import {TodoForm, TodoList, Footer} from "./components/todo";
+import { TodoForm, TodoList, Footer } from "./components/todo";
 import {
-    addTodo,
-    generateId,
-    findById,
-    toggleTodo,
-    updateTodo,
-    removeTodo
+  addTodo,
+  generateId,
+  findById,
+  toggleTodo,
+  updateTodo,
+  removeTodo,
+  filterTodos
 } from "./lib/todoHelpers";
 
-import {pipe, partial} from "./lib/util";
+import { pipe, partial } from "./lib/util";
 
 class App extends Component {
-    state = {
-        todos: [
-            {id: 1, name: "Learn JSX", isComplete: true},
-            {id: 2, name: "Build an Awesome App", isComplete: false},
-            {id: 3, name: "Ship It!", isComplete: false}
-        ],
-        currentTodo: ""
+  state = {
+    todos: [
+      { id: 1, name: "Learn JSX", isComplete: true },
+      { id: 2, name: "Build an Awesome App", isComplete: false },
+      { id: 3, name: "Ship It!", isComplete: false }
+    ],
+    currentTodo: ""
+  };
+
+  static contextTypes = {
+    route: PropTypes.string
+  };
+
+  handleRemove = (id, evt) => {
+    evt.preventDefault();
+    const updatedTodos = removeTodo(this.state.todos, id);
+    this.setState({ todos: updatedTodos });
+  };
+
+  handleToggle = id => {
+    const getUpdateTodos = pipe(
+      findById,
+      toggleTodo,
+      partial(updateTodo, this.state.todos)
+    );
+    const updatedTodos = getUpdateTodos(id, this.state.todos);
+    this.setState({ todos: updatedTodos });
+  };
+
+  handleSubmit = evt => {
+    evt.preventDefault();
+    const newId = generateId();
+    const newTodo = {
+      id: newId,
+      name: this.state.currentTodo,
+      isComplete: false
     };
+    const updatedTodos = addTodo(this.state.todos, newTodo);
+    this.setState({
+      todos: updatedTodos,
+      currentTodo: "",
+      errorMessage: ""
+    });
+  };
 
-    handleRemove = (id, evt) => {
-        evt.preventDefault();
-        const updatedTodos = removeTodo(this.state.todos, id);
-        this.setState({todos: updatedTodos});
-    };
+  handleEmptySubmit = evt => {
+    evt.preventDefault();
+    this.setState({
+      errorMessage: "Please supply a todo name"
+    });
+  };
 
-    handleToggle = id => {
-        const getUpdateTodos = pipe(
-            findById,
-            toggleTodo,
-            partial(updateTodo, this.state.todos)
-        );
-        const updatedTodos = getUpdateTodos(id, this.state.todos);
-        this.setState({todos: updatedTodos});
-    };
+  handleInputChange = evt => {
+    this.setState({
+      currentTodo: evt.target.value
+    });
+  };
 
-    handleSubmit = evt => {
-        evt.preventDefault();
-        const newId = generateId();
-        const newTodo = {
-            id: newId,
-            name: this.state.currentTodo,
-            isComplete: false
-        };
-        const updatedTodos = addTodo(this.state.todos, newTodo);
-        this.setState({
-            todos: updatedTodos,
-            currentTodo: "",
-            errorMessage: ""
-        });
-    };
+  render() {
+    const submitHandler = this.state.currentTodo
+      ? this.handleSubmit
+      : this.handleEmptySubmit;
 
-    handleEmptySubmit = evt => {
-        evt.preventDefault();
-        this.setState({
-            errorMessage: "Please supply a todo name"
-        });
-    };
+    const displayTodos = filterTodos(this.state.todos, this.context.route);
 
-    handleInputChange = evt => {
-        this.setState({
-            currentTodo: evt.target.value
-        });
-    };
-
-    render() {
-        const submitHandler = this.state.currentTodo
-            ? this.handleSubmit
-            : this.handleEmptySubmit;
-
-        return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        React Todos
-                    </a>
-                </header>
-                <div className="Todo-App">
-                    {this.state.errorMessage && (
-                        <span className="error">{this.state.errorMessage}</span>
-                    )}
-                    <TodoForm
-                        handleInputChange={this.handleInputChange}
-                        handleSubmit={submitHandler}
-                    />
-                    <TodoList
-                        handleToggle={this.handleToggle}
-                        todos={this.state.todos}
-                        handleRemove={this.handleRemove}
-                    />
-                    <Footer/>
-                </div>
-            </div>
-        );
-    }
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo"/>
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            React Todos
+          </a>
+        </header>
+        <div className="Todo-App">
+          {this.state.errorMessage && (
+            <span className="error">{this.state.errorMessage}</span>
+          )}
+          <TodoForm
+            handleInputChange={this.handleInputChange}
+            handleSubmit={submitHandler}
+          />
+          <TodoList
+            handleToggle={this.handleToggle}
+            todos={displayTodos}
+            handleRemove={this.handleRemove}
+          />
+          <Footer/>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
