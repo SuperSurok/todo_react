@@ -62,7 +62,12 @@ class App extends Component {
       errorMessage: ""
     });
 
-    createTodo(newTodo).then(() => console.log("Todo added"));
+    createTodo(newTodo).then(() => this.showTempMessgae("Todo added" ));
+  };
+
+  showTempMessgae = msg => {
+    this.setState({ message: msg });
+    setTimeout(() => this.setState({ message: "" }), 2500);
   };
 
   handleEmptySubmit = evt => {
@@ -104,6 +109,9 @@ class App extends Component {
         <div className="Todo-App">
           {this.state.errorMessage && (
             <span className="error">{this.state.errorMessage}</span>
+          )}
+          {this.state.message && (
+            <span className="success">{this.state.message}</span>
           )}
           <TodoForm
             handleInputChange={this.handleInputChange}
