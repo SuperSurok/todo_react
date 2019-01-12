@@ -1,22 +1,28 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 export class Link extends Component {
-    handleClick = evt => {
-        evt.preventDefault();
-        //eslint-disable-next-line
-        history.pushState(null, "", this.props.to);
-    };
+  static contextTypes = {
+    route: PropTypes.string,
+    linkHandler: PropTypes.func
+  };
 
-    render() {
-        return (
-            <a href="#" onClick={this.handleClick}>
-                {this.props.children}
-            </a>
-        );
-    }
+  handleClick = evt => {
+    evt.preventDefault();
+    //eslint-disable-next-line
+    history.pushState(null, "", this.props.to);
+  };
+
+  render() {
+    const activeClass = this.context.route === this.props.to ? "active" : "";
+    return (
+      <button className={activeClass} onClick={this.handleClick}>
+        {this.props.children}
+      </button>
+    );
+  }
 }
 
 Link.propTypes = {
-    to: PropTypes.string
+  to: PropTypes.string
 };
