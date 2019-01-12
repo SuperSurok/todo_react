@@ -15,7 +15,12 @@ import {
 } from "./lib/todoHelpers";
 
 import { pipe, partial } from "./lib/util";
-import { loadTodos, createTodo, saveTodo } from "./lib/todoService";
+import {
+  loadTodos,
+  createTodo,
+  saveTodo,
+  destroyTodo
+} from "./lib/todoService";
 
 class App extends Component {
   state = {
@@ -35,6 +40,7 @@ class App extends Component {
     evt.preventDefault();
     const updatedTodos = removeTodo(this.state.todos, id);
     this.setState({ todos: updatedTodos });
+    destroyTodo(id).then(() => this.showTempMessgae("Todo Removed"));
   };
 
   handleToggle = id => {
@@ -43,8 +49,7 @@ class App extends Component {
     const getUpdateTodos = partial(updateTodo, this.state.todos);
     const updatedTodos = getUpdateTodos(updated);
     this.setState({ todos: updatedTodos });
-    saveTodo(updated)
-      .then(() => this.showTempMessgae("Todo Updated"))
+    saveTodo(updated).then(() => this.showTempMessgae("Todo Updated"));
   };
 
   handleSubmit = evt => {
