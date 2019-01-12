@@ -15,20 +15,22 @@ import {
 } from "./lib/todoHelpers";
 
 import { pipe, partial } from "./lib/util";
+import { loadTodos } from "./lib/todoService";
 
 class App extends Component {
   state = {
-    todos: [
-      { id: 1, name: "Learn JSX", isComplete: true },
-      { id: 2, name: "Build an Awesome App", isComplete: false },
-      { id: 3, name: "Ship It!", isComplete: false }
-    ],
+    todos: [],
     currentTodo: ""
   };
 
   static contextTypes = {
     route: PropTypes.string
   };
+
+  componentDidMount() {
+    loadTodos().then(todos => this.setState({todos}))
+  }
+
 
   handleRemove = (id, evt) => {
     evt.preventDefault();
@@ -85,7 +87,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
+          <img src={logo} className="App-logo" alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
@@ -111,7 +113,7 @@ class App extends Component {
             todos={displayTodos}
             handleRemove={this.handleRemove}
           />
-          <Footer/>
+          <Footer />
         </div>
       </div>
     );
