@@ -1,5 +1,5 @@
 {
-  "todos" : [
+  "todos": [
     {
       "id": 1,
       "name": "Setup Sever",
@@ -18,6 +18,11 @@
     {
       "id": 4,
       "name": "Setup Fetch",
+      "isComplete": false
+    },
+    {
+      "id": 81559,
+      "name": "New Todo",
       "isComplete": false
     }
   ]

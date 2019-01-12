@@ -15,7 +15,7 @@ import {
 } from "./lib/todoHelpers";
 
 import { pipe, partial } from "./lib/util";
-import { loadTodos } from "./lib/todoService";
+import { loadTodos, createTodo } from "./lib/todoService";
 
 class App extends Component {
   state = {
@@ -28,9 +28,8 @@ class App extends Component {
   };
 
   componentDidMount() {
-    loadTodos().then(todos => this.setState({todos}))
+    loadTodos().then(todos => this.setState({ todos }));
   }
-
 
   handleRemove = (id, evt) => {
     evt.preventDefault();
@@ -62,6 +61,8 @@ class App extends Component {
       currentTodo: "",
       errorMessage: ""
     });
+
+    createTodo(newTodo).then(() => console.log("Todo added"));
   };
 
   handleEmptySubmit = evt => {
